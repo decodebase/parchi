@@ -37,7 +37,7 @@ export function QRDisplay({ qrToken, ticketId, className }: QRDisplayProps) {
       )}
       {error && !loading && (
         <div className="w-[220px] h-[220px] flex flex-col items-center justify-center gap-2">
-          <span className="text-3xl">⚠️</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
           <p className="text-xs text-center text-[#999]">Could not render QR code</p>
         </div>
       )}
@@ -54,7 +54,10 @@ export function QRDisplay({ qrToken, ticketId, className }: QRDisplayProps) {
           {/* Parchi logo center overlay */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="w-9 h-9 bg-black rounded-lg flex items-center justify-center border border-white/10">
-              <span className="text-base">🎫</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF6A3D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+                <path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/>
+              </svg>
             </div>
           </div>
         </div>

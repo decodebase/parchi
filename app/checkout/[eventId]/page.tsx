@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils/cn";
 import type { EventWithTiers, TicketTier } from "@/lib/types/database";
-import { Tag, X, Mail, ArrowRight, KeyRound, Loader2, CheckCircle2, XCircle, Ticket, AlertTriangle } from "lucide-react";
+import { Tag, X, Mail, ArrowRight, KeyRound, Loader2, CheckCircle2, XCircle, Ticket, AlertTriangle, Banknote, CreditCard } from "lucide-react";
 
 interface Props {
   params: Promise<{ eventId: string }>;
@@ -381,7 +381,7 @@ function CheckoutContent({ params }: Props) {
                         <span className="text-muted">{effPrice === 0 ? "Free" : `PKR ${(effPrice / 100).toLocaleString()}`} × {selections[tier.id]}</span>
                         <span className="text-text font-semibold">{effPrice === 0 ? "Free" : `PKR ${((effPrice * (selections[tier.id] ?? 0)) / 100).toLocaleString()}`}</span>
                       </div>
-                      {disc && <p className="text-success text-xs">🏷 {disc.label} — was PKR {(tier.price / 100).toLocaleString()}</p>}
+                      {disc && <p className="text-success text-xs flex items-center gap-1"><Tag size={10} /> {disc.label} — was PKR {(tier.price / 100).toLocaleString()}</p>}
                     </div>
                   );
                 })}
@@ -405,12 +405,12 @@ function CheckoutContent({ params }: Props) {
                 <button onClick={() => setPaymentMethod("cash")}
                   className={cn("p-4 rounded-xl border-2 text-left transition-all",
                     paymentMethod === "cash" ? "border-primary bg-primary/5" : "border-border/60 bg-surface")}>
-                  <div className="text-2xl mb-1">💵</div>
+                  <Banknote size={22} className={cn("mb-1", paymentMethod === "cash" ? "text-primary" : "text-muted")} strokeWidth={1.5} />
                   <p className="text-text font-semibold text-sm">Pay at Door</p>
                   <p className="text-muted text-xs mt-0.5">Cash on arrival</p>
                 </button>
                 <button disabled className="p-4 rounded-xl border-2 border-border/60 bg-surface text-left opacity-40 cursor-not-allowed">
-                  <div className="text-2xl mb-1">💳</div>
+                  <CreditCard size={22} className="text-muted mb-1" strokeWidth={1.5} />
                   <p className="text-text font-semibold text-sm">Online</p>
                   <p className="text-muted text-xs mt-0.5">Coming soon</p>
                 </button>
@@ -420,8 +420,9 @@ function CheckoutContent({ params }: Props) {
 
           {!isFree && paymentMethod === "cash" && (
             <div className="p-4 bg-warning/10 border border-warning/20 rounded-xl">
-              <p className="text-warning text-sm font-medium">
-                💵 Your parchi will be generated now. Pay PKR {(totalAmount / 100).toLocaleString()} in cash at the venue entrance.
+              <p className="text-warning text-sm font-medium flex items-center gap-2">
+                <Banknote size={15} className="shrink-0" />
+                Your parchi will be generated now. Pay PKR {(totalAmount / 100).toLocaleString()} in cash at the venue entrance.
               </p>
             </div>
           )}
