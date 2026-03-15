@@ -332,7 +332,7 @@ function CheckoutContent({ params }: Props) {
             </div>
           )}
         </div>
-        <button onClick={() => router.push("/my-parchi")}
+        <button onClick={() => { window.location.href = "/my-parchi"; }}
           className="w-full max-w-xs py-3.5 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
           <Ticket size={18} />
           View My Parchi
