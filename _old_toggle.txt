@@ -1,0 +1,1 @@
+      onClick={() => updateTier(tier.id, "discountsEnabled", !tier.discountsEnabled)}

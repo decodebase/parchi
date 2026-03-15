@@ -1,0 +1,14 @@
+      onClick={() => {
+                        const enabling = !tier.discountsEnabled;
+                        setTiers((t) => t.map((x) => {
+                          if (x.id !== tier.id) return x;
+                          return {
+                            ...x,
+                            discountsEnabled: enabling,
+                            // Auto-add first slot when switching on; clear when switching off
+                            discounts: enabling && x.discounts.length === 0
+                              ? [makeDiscount()]
+                              : enabling ? x.discounts : [],
+                          };
+                        }));
+                      }}
