@@ -8,7 +8,6 @@ import { Loader2, ArrowRight, KeyRound } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
-
   const [phase, setPhase] = useState<"form" | "otp">("form");
 
   // Form fields
@@ -23,7 +22,8 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // ── Step 1: Sign up → triggers OTP email ──────────────────────
+  // ── Step 1: signUp() — Supabase sends ONE "Confirm signup" email with {{ .Token }} ──
+  // No signInWithOtp() here — that would send a second conflicting email.
   async function handleSignUp(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -39,7 +39,7 @@ export default function RegisterPage() {
         password,
         options: {
           data: { display_name: displayName.trim() },
-          // No emailRedirectTo — forces Supabase to send OTP code, not magic link
+          // No emailRedirectTo — keeps it as OTP token mode, not magic link
         },
       });
       if (signUpError) throw signUpError;
@@ -51,29 +51,30 @@ export default function RegisterPage() {
     }
   }
 
-  // ── Step 2: Verify OTP → sign in + redirect ───────────────────
+  // ── Step 2: verifyOtp type "signup" — confirms the account and logs user in ──
   async function handleVerifyOtp(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    if (otp.length < 6) { setError("Enter the full code from your email"); return; }
+    if (otp.trim().length < 6) { setError("Enter the full code from your email"); return; }
 
     setLoading(true);
     try {
       const supabase = createClient();
-      const { data: verifyData, error: verifyError } = await supabase.auth.verifyOtp({
+      const { data, error: verifyError } = await supabase.auth.verifyOtp({
         email: email.trim().toLowerCase(),
         token: otp.trim(),
         type: "signup",
       });
       if (verifyError) throw verifyError;
-      // Write the session cookie so middleware sees the user as logged in
-      if (verifyData.session) {
+      // Write session cookie so middleware sees user as logged in immediately
+      if (data.session) {
         await supabase.auth.setSession({
-          access_token: verifyData.session.access_token,
-          refresh_token: verifyData.session.refresh_token,
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
         });
       }
-      router.replace("/");
+      // Full reload so middleware picks up the new session cookie
+      window.location.href = "/";
     } catch (err: any) {
       setError(err.message ?? "Invalid code. Check your email and try again.");
     } finally {
@@ -105,11 +106,8 @@ export default function RegisterPage() {
                   {error}
                 </div>
               )}
-
               <div>
-                <label className="block text-sm font-medium mb-2 text-[#9CA3AF]">
-                  Verification code
-                </label>
+                <label className="block text-sm font-medium mb-2 text-[#9CA3AF]">Verification code</label>
                 <input
                   type="text"
                   inputMode="numeric"
@@ -124,15 +122,14 @@ export default function RegisterPage() {
                 />
                 <p className="text-[#6B7280] text-xs mt-2">Enter the code from your email. It expires in 1 hour.</p>
               </div>
-
               <button
                 type="submit"
-                disabled={loading || otp.length < 6}
+                disabled={loading || otp.trim().length < 6}
                 className="w-full rounded-xl py-3 text-sm font-semibold transition-all flex items-center justify-center gap-2"
                 style={{
-                  background: loading || otp.length < 6 ? "#2A2A30" : "#FF6A3D",
-                  color: loading || otp.length < 6 ? "#6B7280" : "#FAFAFA",
-                  cursor: loading || otp.length < 6 ? "not-allowed" : "pointer",
+                  background: loading || otp.trim().length < 6 ? "#2A2A30" : "#FF6A3D",
+                  color: loading || otp.trim().length < 6 ? "#6B7280" : "#FAFAFA",
+                  cursor: loading || otp.trim().length < 6 ? "not-allowed" : "pointer",
                 }}
               >
                 {loading ? <Loader2 size={16} className="animate-spin" /> : <><span>Verify & Continue</span><ArrowRight size={15} /></>}
@@ -151,7 +148,7 @@ export default function RegisterPage() {
     );
   }
 
-  // ── Sign up form phase ────────────────────────────────────────
+  // ── Sign up form ──────────────────────────────────────────────
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-[#0A0A0B]">
       <div className="w-full max-w-sm">
