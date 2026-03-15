@@ -9,7 +9,7 @@ import { createClient } from "@/lib/supabase/client";
 import { QRDisplay } from "@/components/parchi/QRDisplay";
 import { cn } from "@/lib/utils/cn";
 import type { TicketWithEvent } from "@/lib/types/database";
-import { MapPin, Calendar, Clock, Tag, Ticket } from "lucide-react";
+import { MapPin, Calendar, Clock, Tag, Ticket, CheckCircle2, XCircle, Maximize2 } from "lucide-react";
 
 interface Props {
   params: Promise<{ ticketId: string }>;
@@ -221,7 +221,7 @@ export default function TicketDetailPage({ params }: Props) {
                 </>
               ) : isUsed ? (
                 <div className="py-8 flex flex-col items-center gap-2 text-center">
-                  <span className="text-5xl">✅</span>
+                  <CheckCircle2 size={44} className="text-success" strokeWidth={1.5} />
                   <p className="text-text font-bold">Ticket Used</p>
                   {ticket.checked_in_at && (
                     <p className="text-muted text-xs">
@@ -234,7 +234,7 @@ export default function TicketDetailPage({ params }: Props) {
                 </div>
               ) : (
                 <div className="py-8 flex flex-col items-center gap-2 text-center">
-                  <span className="text-5xl">❌</span>
+                  <XCircle size={44} className="text-error" strokeWidth={1.5} />
                   <p className="text-text font-bold capitalize">{ticket.status}</p>
                   <p className="text-muted text-xs font-mono tracking-widest mt-1">#{shortId}</p>
                 </div>
@@ -256,7 +256,7 @@ export default function TicketDetailPage({ params }: Props) {
               onClick={() => setShowFullscreen(true)}
               className="w-full max-w-sm mx-auto mt-4 flex items-center justify-center gap-2 py-3.5 bg-primary text-white font-bold text-sm rounded-2xl hover:bg-primary/90 active:scale-[0.98] transition-all"
             >
-              <span className="text-base">📲</span>
+              <Maximize2 size={16} />
               Show QR at Entrance (Fullscreen)
             </button>
           )}

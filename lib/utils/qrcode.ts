@@ -134,7 +134,7 @@ export async function tokenToQRDataURL(token: string): Promise<string> {
     margin: 2,
     color: {
       dark: "#FFFFFF",
-      light: "#000000",
+      light: "#00000000", // transparent background
     },
   });
 }
