@@ -34,31 +34,28 @@ export default function RegisterPage() {
     try {
       const supabase = createClient();
 
-      // Check if email is already registered before attempting signUp.
-      // signUp() on an existing email silently re-sends an OTP without error,
-      // which confuses the user. We detect it early via signInWithPassword
-      // using a dummy password — if the error is NOT "Invalid login credentials"
-      // then the account exists (wrong password = account exists).
-      const { error: checkError } = await supabase.auth.signInWithPassword({
-        email: email.trim().toLowerCase(),
-        password: "__existence_check__",
-      });
-      // "Invalid login credentials" = wrong password = account exists
-      // "Email not confirmed" = account exists but unconfirmed
-      if (checkError?.message?.includes("Invalid login credentials") ||
-          checkError?.message?.includes("Email not confirmed")) {
-        setError("An account with this email already exists. Please sign in instead.");
-        return;
-      }
-
-      const { error: signUpError } = await supabase.auth.signUp({
+      // Supabase intentionally returns "Invalid login credentials" for BOTH
+      // wrong password AND non-existent email (to prevent email enumeration).
+      // So a dummy signInWithPassword check cannot distinguish the two cases.
+      // Instead: call signUp() directly. If the email already exists,
+      // Supabase returns a user object with identities=[] (empty array) and
+      // no error — that is the reliable signal for a duplicate email.
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: email.trim().toLowerCase(),
         password,
         options: {
           data: { display_name: displayName.trim() },
         },
       });
+
       if (signUpError) throw signUpError;
+
+      // Duplicate email: Supabase returns a fake user with no identities
+      if (signUpData.user && signUpData.user.identities?.length === 0) {
+        setError("An account with this email already exists. Please sign in instead.");
+        return;
+      }
+
       setPhase("otp");
     } catch (err: any) {
       setError(err.message ?? "Failed to create account");
