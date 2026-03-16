@@ -1,0 +1,7 @@
+"use client";
+import { useEffect } from "react";
+// This page is vestigial — scanner portal lives at app/scan/portal/
+export default function Redirect() {
+  useEffect(() => { window.location.replace("/scan/portal"); }, []);
+  return null;
+}

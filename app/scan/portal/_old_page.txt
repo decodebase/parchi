@@ -1,0 +1,4 @@
+// Replaced by app/scan/portal/layout.tsx + page.tsx (scanner portal with own 3-tab nav)
+// This file intentionally left as a redirect shim.
+// Next.js will use the layout.tsx in this same directory.
+export { default } from "./page-redirect";

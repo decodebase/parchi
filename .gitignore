@@ -1,0 +1,99 @@
+# ─────────────────────────────────────────────
+# Dependencies
+# ─────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+
+# ─────────────────────────────────────────────
+# Next.js build output
+# ─────────────────────────────────────────────
+.next/
+out/
+build/
+
+# ─────────────────────────────────────────────
+# Cloudflare / Vercel / Wrangler output
+# ─────────────────────────────────────────────
+.vercel/
+.wrangler/
+wrangler.log
+
+# ─────────────────────────────────────────────
+# Environment files — NEVER commit these
+# Contains real API keys, service role keys, secrets
+# ─────────────────────────────────────────────
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+.env.staging
+
+# ─────────────────────────────────────────────
+# Supabase
+# ─────────────────────────────────────────────
+supabase/.branches
+supabase/.temp
+supabase/functions/.wrangler
+supabase.exe
+
+# SQL schema files — contain DB structure, keep local only
+# Run manually in Supabase SQL editor, never auto-deploy
+*.sql
+supabase/migrations/
+supabase/seed.sql
+
+# ─────────────────────────────────────────────
+# Internal dev files — not for public repo
+# ─────────────────────────────────────────────
+SESSION.md
+
+# ─────────────────────────────────────────────
+# Temp / patch / scratch files
+# ─────────────────────────────────────────────
+_old_toggle.txt
+_rpc_patch.txt
+_toggle_patch.txt
+*.patch
+*.tmp
+*.bak
+*.orig
+
+# Junk files accidentally created by npm output redirect
+NOTE
+This
+You
+next
+parchi-pk@1.0.0
+FETCH_HEAD
+166
+57
+
+# ─────────────────────────────────────────────
+# OS / Editor junk
+# ─────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.pem
+.idea/
+.vscode/settings.json
+*.suo
+*.user
+
+# ─────────────────────────────────────────────
+# Logs
+# ─────────────────────────────────────────────
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# ─────────────────────────────────────────────
+# TypeScript
+# ─────────────────────────────────────────────
+*.tsbuildinfo
+next-env.d.ts
