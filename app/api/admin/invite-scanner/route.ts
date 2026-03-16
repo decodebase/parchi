@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
     if (inviteError || !invited.user) {
       console.error("Invite error:", inviteError);
       return NextResponse.json(
-        { error: inviteError?.message ?? "Failed to send invite" },
+        { error: "Failed to send invite" },
         { status: 500 }
       );
     }
@@ -119,7 +119,6 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({
     ok: true,
-    userId: newUserId,
     message: alreadyExisted
       ? `${email} has been added to your scanner team${eventId ? " and assigned to the event" : ""}.`
       : `Invite sent to ${email}. They'll receive an email to set up their account.`,

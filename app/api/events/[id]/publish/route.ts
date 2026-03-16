@@ -45,7 +45,7 @@ export async function POST(
   const nextStatus = transitions[event.status];
   if (!nextStatus) {
     return NextResponse.json(
-      { error: `Cannot transition from status "${event.status}"` },
+      { error: "Event cannot be published in its current status" },
       { status: 400 }
     );
   }

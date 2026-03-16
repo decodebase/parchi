@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
 
   if (insertError) {
     console.error("Scanner assign error:", JSON.stringify(insertError));
-    return NextResponse.json({ error: insertError.message ?? "Failed to assign scanner" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to assign scanner" }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true });

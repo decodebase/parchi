@@ -53,8 +53,7 @@ Deno.serve(async (req) => {
     } = await supabaseUser.auth.getUser();
 
     if (authError || !user) {
-      console.error("Auth error:", authError?.message, "| Status:", authError?.status);
-      return json({ error: "Unauthorized", detail: authError?.message ?? "no user" }, 401);
+      return json({ error: "Unauthorized" }, 401);
     }
 
     // ── Parse body ────────────────────────────────────────────
