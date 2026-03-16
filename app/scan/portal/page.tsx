@@ -55,34 +55,39 @@ export default function ScannerEventsPage() {
     setLoading(true);
     try {
       const supabase = createClient();
+      const role = profile?.role;
 
-      if (profile?.role === "organiser" || profile?.role === "admin") {
-        const { data } = await supabase
+      // Always fetch scanner assignments first — any role can be assigned as scanner
+      const { data: assignments } = await supabase
+        .from("scanner_assignments")
+        .select("event_id")
+        .eq("scanner_id", user!.id);
+
+      const assignedEventIds = (assignments ?? []).map((a: any) => a.event_id).filter(Boolean);
+
+      // For organiser/admin: also include events they own
+      let ownedEventIds: string[] = [];
+      if (role === "organiser" || role === "admin") {
+        const { data: ownedEvents } = await supabase
           .from("events")
-          .select("id, title, venue, city, event_date, cover_image, status")
+          .select("id")
           .eq("organiser_id", user!.id)
-          .in("status", ["published", "completed"])
-          .order("event_date", { ascending: false });
-        setEvents(data ?? []);
-      } else {
-        // Scanners: all assignments, then fetch event details separately
-        // (avoids RLS join failures on the events table)
-        const { data: assignments } = await supabase
-          .from("scanner_assignments")
-          .select("event_id")
-          .eq("scanner_id", user!.id);
-
-        const eventIds = (assignments ?? []).map((a: any) => a.event_id).filter(Boolean);
-        if (eventIds.length === 0) { setEvents([]); return; }
-
-        const { data: eventData } = await supabase
-          .from("events")
-          .select("id, title, venue, city, event_date, cover_image, status")
-          .in("id", eventIds)
-          .order("event_date", { ascending: false });
-
-        setEvents((eventData ?? []) as AssignedEvent[]);
+          .in("status", ["published", "completed", "approved"]);
+        ownedEventIds = (ownedEvents ?? []).map((e: any) => e.id);
       }
+
+      // Merge and deduplicate all event IDs
+      const allEventIds = [...new Set([...assignedEventIds, ...ownedEventIds])];
+
+      if (allEventIds.length === 0) { setEvents([]); return; }
+
+      const { data: eventData } = await supabase
+        .from("events")
+        .select("id, title, venue, city, event_date, cover_image, status")
+        .in("id", allEventIds)
+        .order("event_date", { ascending: false });
+
+      setEvents((eventData ?? []) as AssignedEvent[]);
     } finally {
       setLoading(false);
     }
@@ -91,14 +96,8 @@ export default function ScannerEventsPage() {
   return (
     <div className="px-4 py-6 space-y-4">
       <div>
-        <h1 className="text-text text-xl font-bold">
-          {profile?.role === "scanner" ? "My Assigned Events" : "Your Events"}
-        </h1>
-        <p className="text-muted text-xs mt-0.5">
-          {profile?.role === "scanner"
-            ? "All events you have been assigned to scan."
-            : "Your published events ready to scan."}
-        </p>
+        <h1 className="text-text text-xl font-bold">Scanner Events</h1>
+        <p className="text-muted text-xs mt-0.5">Events you can scan tickets for.</p>
       </div>
 
       {loading ? (

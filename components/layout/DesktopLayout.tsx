@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils/cn";
 import { createClient } from "@/lib/supabase/client";
 import {
   LayoutDashboard, CalendarDays, ScanLine, Megaphone,
-  ChevronLeft, LogOut, type LucideIcon,
+  ChevronLeft, LogOut, User, type LucideIcon,
 } from "lucide-react";
 
 type IconComp = LucideIcon;
@@ -159,7 +159,7 @@ export function DesktopLayout({
             );
           })}
           <Link href="/profile" className="flex-1 flex flex-col items-center justify-center gap-1 py-2">
-            <ChevronLeft className="w-5 h-5 text-[#6B7280]" strokeWidth={1.6} />
+            <User className="w-5 h-5 text-[#6B7280]" strokeWidth={1.6} />
             <span className="text-[10px] font-medium text-[#6B7280]">Profile</span>
           </Link>
         </div>
