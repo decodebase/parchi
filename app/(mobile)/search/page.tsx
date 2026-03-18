@@ -162,7 +162,10 @@ function SearchContent() {
       if (query.trim()) {
         req = req.or(`title.ilike.%${query}%,description.ilike.%${query}%,venue.ilike.%${query}%`);
       }
-      if (selectedCategory) req = req.eq("category", selectedCategory);
+      if (selectedCategory) {
+        // Match events where the category is the primary category OR stored as a secondary category in tags
+        req = req.or(`category.eq.${selectedCategory},tags.cs.{${selectedCategory}}`);
+      }
       if (selectedCity !== "All Cities") req = req.eq("city", selectedCity);
 
       const { data, error: err } = await Promise.race([

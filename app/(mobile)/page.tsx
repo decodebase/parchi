@@ -190,7 +190,12 @@ export default function HomePage() {
     }
   }
 
-  const filteredUpcoming = activeCategory ? upcoming.filter(e => e.category === activeCategory) : upcoming;
+  const filteredUpcoming = activeCategory
+    ? upcoming.filter(e =>
+        e.category === activeCategory ||
+        (e.tags ?? []).includes(activeCategory)
+      )
+    : upcoming;
 
   return (
     <div className="min-h-screen pb-10">

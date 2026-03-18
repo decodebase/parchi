@@ -45,13 +45,38 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
   general:    { bg: "rgba(107,114,128,0.15)",text: "#9CA3AF" },
 };
 
-function CategoryPill({ category }: { category: string | null }) {
-  if (!category) return null;
+const ALL_CATEGORIES = new Set([
+  "music", "food", "sports", "arts", "comedy", "nightlife",
+  "festival", "networking", "conference", "family", "general", "tech",
+]);
+
+function getEventCategories(event: Event & { ticket_tiers?: TicketTier[] }): string[] {
+  const cats: string[] = [];
+  if (event.category) cats.push(event.category);
+  if (event.tags) {
+    for (const tag of event.tags) {
+      if (ALL_CATEGORIES.has(tag) && !cats.includes(tag)) cats.push(tag);
+    }
+  }
+  return cats;
+}
+
+function CategoryPill({ category }: { category: string }) {
   const c = CATEGORY_COLORS[category] ?? CATEGORY_COLORS.general;
   return (
     <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full capitalize" style={{ background: c.bg, color: c.text }}>
       {category}
     </span>
+  );
+}
+
+function CategoryPills({ event }: { event: Event & { ticket_tiers?: TicketTier[] } }) {
+  const cats = getEventCategories(event);
+  if (cats.length === 0) return null;
+  return (
+    <div className="flex flex-wrap gap-1">
+      {cats.map(cat => <CategoryPill key={cat} category={cat} />)}
+    </div>
   );
 }
 
@@ -98,7 +123,7 @@ function DefaultCard({ event, price, soldOut, className }: InternalProps) {
           )}
         </div>
         <div className="p-4 flex flex-col" style={{ minHeight: "148px" }}>
-          <CategoryPill category={event.category ?? null} />
+          <CategoryPills event={event} />
           <h3 className="font-semibold text-text text-base leading-snug line-clamp-1 group-hover:text-primary transition-colors mt-2 mb-2">
             {event.title}
           </h3>
@@ -140,7 +165,7 @@ function FeaturedCard({ event, price, soldOut, className }: InternalProps) {
         }
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-5 space-y-2">
-          <CategoryPill category={event.category ?? null} />
+          <CategoryPills event={event} />
           <h2 className="font-bold text-white text-lg leading-tight line-clamp-2">{event.title}</h2>
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
@@ -190,7 +215,7 @@ function HorizontalCard({ event, price, soldOut, className }: InternalProps) {
         </div>
         <div className="flex flex-col justify-between min-w-0 flex-1 py-0.5">
           <div className="space-y-1">
-            <CategoryPill category={event.category ?? null} />
+            <CategoryPills event={event} />
             <h3 className="font-semibold text-text text-base line-clamp-1">{event.title}</h3>
             <p className="text-muted text-xs flex items-center gap-1"><MapPin className="w-3 h-3 shrink-0" strokeWidth={2} />{event.venue}, {event.city}</p>
             <p className="text-muted text-xs flex items-center gap-1"><Calendar className="w-3 h-3 shrink-0" strokeWidth={2} />{formatDate(event.event_date)} · {formatTime(event.event_date)}</p>
