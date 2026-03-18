@@ -191,10 +191,7 @@ export default function HomePage() {
   }
 
   const filteredUpcoming = activeCategory
-    ? upcoming.filter(e =>
-        e.category === activeCategory ||
-        (e.tags ?? []).includes(activeCategory)
-      )
+    ? upcoming.filter(e => (e.categories ?? []).includes(activeCategory))
     : upcoming;
 
   return (

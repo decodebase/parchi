@@ -17,7 +17,7 @@ export type Database = {
       events: {
         Row: {
           address: string | null
-          category: string | null
+          categories: string[] | null
           city: string
           cover_image: string | null
           created_at: string | null
@@ -38,7 +38,7 @@ export type Database = {
         }
         Insert: {
           address?: string | null
-          category?: string | null
+          categories?: string[] | null
           city: string
           cover_image?: string | null
           created_at?: string | null
@@ -59,7 +59,7 @@ export type Database = {
         }
         Update: {
           address?: string | null
-          category?: string | null
+          categories?: string[] | null
           city?: string
           cover_image?: string | null
           created_at?: string | null

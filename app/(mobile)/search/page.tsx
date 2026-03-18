@@ -163,8 +163,7 @@ function SearchContent() {
         req = req.or(`title.ilike.%${query}%,description.ilike.%${query}%,venue.ilike.%${query}%`);
       }
       if (selectedCategory) {
-        // Match events where the category is the primary category OR stored as a secondary category in tags
-        req = req.or(`category.eq.${selectedCategory},tags.cs.{${selectedCategory}}`);
+        req = req.contains("categories", [selectedCategory]);
       }
       if (selectedCity !== "All Cities") req = req.eq("city", selectedCity);
 

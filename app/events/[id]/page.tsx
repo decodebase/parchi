@@ -167,12 +167,8 @@ export default async function EventDetailPage({ params }: Props) {
         {/* Category + title */}
         <div className="space-y-2">
           <div className="flex flex-wrap gap-1.5">
-            {event.category && <CategoryBadge category={event.category} />}
-            {(event.tags ?? []).filter(tag => [
-              "music", "food", "sports", "arts", "comedy", "nightlife",
-              "festival", "networking", "conference", "family", "general", "tech",
-            ].includes(tag) && tag !== event.category).map(tag => (
-              <CategoryBadge key={tag} category={tag} />
+            {(event.categories ?? []).map(cat => (
+              <CategoryBadge key={cat} category={cat} />
             ))}
           </div>
           <h1 className="text-text font-bold text-2xl leading-tight">{event.title}</h1>
@@ -213,16 +209,10 @@ export default async function EventDetailPage({ params }: Props) {
           </div>
         )}
 
-        {/* Tags — exclude secondary categories (already shown as badges above) */}
-        {event.tags && event.tags.filter(tag => ![
-          "music", "food", "sports", "arts", "comedy", "nightlife",
-          "festival", "networking", "conference", "family", "general", "tech",
-        ].includes(tag)).length > 0 && (
+        {/* Tags */}
+        {event.tags && event.tags.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            {event.tags.filter(tag => ![
-              "music", "food", "sports", "arts", "comedy", "nightlife",
-              "festival", "networking", "conference", "family", "general", "tech",
-            ].includes(tag)).map((tag) => (
+            {event.tags.map((tag) => (
               <span
                 key={tag}
                 className="text-xs px-3 py-1 bg-surface2 text-muted border border-border/40 rounded-full"

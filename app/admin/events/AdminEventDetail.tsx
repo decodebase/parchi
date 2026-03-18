@@ -29,7 +29,7 @@ interface EventData {
   end_date?: string | null;
   cover_image?: string | null;
   promo_video_url?: string | null;
-  category?: string | null;
+  categories?: string[] | null;
   tags?: string[] | null;
   is_featured: boolean;
   created_at: string;
@@ -156,8 +156,8 @@ export function AdminEventDetail({ event: e, closeHref }: Props) {
             {e.end_date && (
               <DetailCard icon={Clock} label="End" value={fmt(e.end_date)} sub={fmtTime(e.end_date)} />
             )}
-            {e.category && (
-              <DetailCard icon={Tag} label="Category" value={e.category} />
+            {e.categories && e.categories.length > 0 && (
+              <DetailCard icon={Tag} label="Categories" value={e.categories.join(", ")} />
             )}
             <DetailCard icon={Users} label="Capacity" value={`${totalSold} / ${totalCap}`} sub="sold / total" />
             <DetailCard icon={Ticket} label="Tiers" value={`${tiers.length}`} sub="ticket tier(s)" />

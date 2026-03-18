@@ -45,20 +45,8 @@ const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
   general:    { bg: "rgba(107,114,128,0.15)",text: "#9CA3AF" },
 };
 
-const ALL_CATEGORIES = new Set([
-  "music", "food", "sports", "arts", "comedy", "nightlife",
-  "festival", "networking", "conference", "family", "general", "tech",
-]);
-
 function getEventCategories(event: Event & { ticket_tiers?: TicketTier[] }): string[] {
-  const cats: string[] = [];
-  if (event.category) cats.push(event.category);
-  if (event.tags) {
-    for (const tag of event.tags) {
-      if (ALL_CATEGORIES.has(tag) && !cats.includes(tag)) cats.push(tag);
-    }
-  }
-  return cats;
+  return event.categories ?? [];
 }
 
 function CategoryPill({ category }: { category: string }) {

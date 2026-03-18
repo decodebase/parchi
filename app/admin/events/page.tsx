@@ -35,7 +35,7 @@ export default async function AdminEventsPage({ searchParams }: PageProps) {
     .from("events")
     .select(`
       id, title, status, is_featured, city, event_date, end_date, created_at,
-      organiser_id, description, venue, address, cover_image, promo_video_url, category, tags,
+      organiser_id, description, venue, address, cover_image, promo_video_url, categories, tags,
       profiles(display_name, email),
       ticket_tiers(id, name, price, total_quantity, sold_quantity)
     `)
