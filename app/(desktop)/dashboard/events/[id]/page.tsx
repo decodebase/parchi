@@ -217,7 +217,7 @@ export default async function EventManagePage({ params, searchParams }: Props) {
 
           <div className="bg-surface rounded-xl border border-border/60 p-4 space-y-3">
             <p className="text-text font-semibold text-sm">Event Details</p>
-            <DetailRow label="Category" value={e.category ?? ""} />
+            <DetailRow label="Categories" value={(e.categories ?? []).join(", ")} />
             <DetailRow label="City" value={e.city} />
             {e.address && <DetailRow label="Address" value={e.address} />}
             <DetailRow label="Created" value={new Date(e.created_at).toLocaleDateString("en-PK")} />
